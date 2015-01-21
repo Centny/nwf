@@ -1,0 +1,20 @@
+{
+    "name": "netwc-js",
+    "version": "0.0.1",
+    "description": "netw package client by nodejs",
+    "author": "Centny",
+    "engines": {
+        "node": ">= 0.8.11"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "chai": "0.5.11",
+        "jshint": "2.1.10",
+        "istanbul": "0.1.43",
+        "mocha": "1.12.0",
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Centny/nwf"
+    }
+}
