@@ -10,7 +10,7 @@
         "chai": "0.5.11",
         "jshint": "2.1.10",
         "istanbul": "0.1.43",
-        "mocha": "1.12.0",
+        "mocha": "1.12.0"
     },
     "repository": {
         "type": "git",
