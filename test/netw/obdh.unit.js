@@ -44,10 +44,18 @@ describe('obdh', function() {
 			write_: function(v) {
 				console.log(v);
 			},
+			end: function() {
+
+			},
+			destroy: function() {
+
+			},
 		}, 1);
 		var buf = new Buffer(3);
 		buf.write("abc", 0);
 		oh.write(buf);
+		oh.end();
+		oh.destroy();
 		try {
 			obdh.NewCon(null, null);
 		} catch (e) {

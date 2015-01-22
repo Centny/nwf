@@ -161,10 +161,62 @@ describe('netw', function() {
 		} catch (e) {}
 	});
 	describe("new CH", function() {
-		var ch = netw.NewCH();
+		var vv = {
+			OnConn: function() {
+				return true;
+			},
+			OnErr: function() {},
+			OnClose: function() {},
+			OnCmd: function() {},
+		};
+		var ch = netw.NewCH(vv, vv);
 		ch.OnConn(null);
 		ch.OnClose(null);
 		ch.OnErr(null, null);
 		ch.OnCmd(null);
+	});
+	describe("newcon", function() {
+		var bp = pool.NewPool(8, 10240);
+		var con = netw.NewCon_j(bp, {
+			OnConn: function(c) {
+				expect(true).equal(c);
+				return true;
+			},
+			OnErr: function(c, err) {
+				expect(false).equal(c === null);
+				console.log(err, "--->");
+			},
+			OnClose: function(c) {
+				expect(true).equal(c !== null);
+			},
+			OnCmd: function(c) {
+				expect(true).equal(c);
+			},
+		});
+		try {
+			con.writev({});
+		} catch (e) {}
+		con = netw.NewCon(bp, {
+			OnConn: function(c) {
+				expect(true).equal(c);
+				return true;
+			},
+			OnErr: function(c, err) {
+				expect(false).equal(c === null);
+				console.log(err, "--->");
+			},
+			OnClose: function(c) {
+				expect(true).equal(c !== null);
+			},
+			OnCmd: function(c) {
+				expect(true).equal(c);
+			},
+		});
+		try {
+			con.V2B({});
+		} catch (e) {}
+		try {
+			con.B2V({});
+		} catch (e) {}
 	});
 });
