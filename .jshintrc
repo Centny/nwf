@@ -77,5 +77,6 @@
     "trailing"      : true,   // Prohibit trailing whitespaces. (only works if white is 'true')
     "white"         : false,   // Check against strict whitespace and indentation rules.
     "indent"        : 4,      // Enforce consistent indenting.
-    "unused"        : true
+    "unused"        : true,
+    "smarttabs"     : true
 }

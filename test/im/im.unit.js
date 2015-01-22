@@ -1,4 +1,4 @@
-var im = require('../../lib/netw/im.js');
+var im = require('../../lib/im/im.js');
 var pool = require('../../lib/buffer.js');
 var expect = require('chai').expect;
 
