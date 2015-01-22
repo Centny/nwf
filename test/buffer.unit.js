@@ -1,4 +1,4 @@
-var pool = require('../../lib/pool/buffer.js');
+var pool = require('../lib/buffer.js');
 // var expect = require('chai').expect;
 describe('pool', function() {
 	it("buffer", function() {
@@ -20,7 +20,7 @@ describe('pool', function() {
 			}
 		}
 		console.log(buf.Size());
-		buf.T = 10;
+		buf.T = 1;
 		buf.GC();
 		console.timeEnd('alloc');
 		buf.Free(null);
@@ -35,5 +35,6 @@ describe('pool', function() {
 		try {
 			pool.NewPool(1, 2);
 		} catch (e) {}
+		buf.Free(1);
 	});
 });

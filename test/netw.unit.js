@@ -1,32 +1,98 @@
-var netw = require('../../lib/netw/netw.js');
-var pool = require('../../lib/pool/buffer.js');
+var netw = require('../lib/netw.js');
+var pool = require('../lib/buffer.js');
 var expect = require('chai').expect;
+var net = require('net');
 describe('netw', function() {
+	var buf = new Buffer(16);
+	buf.write(netw.H_MOD);
+	buf.writeUInt16BE(3, 3);
+	buf.write("abc", 5);
+	buf.write(netw.H_MOD, 8);
+	buf.writeUInt16BE(3, 11);
+	buf.write("abc", 13);
+	describe("connect", function() {
+		it("conn", function(done) {
+			var s = net.createServer(function(socket) {
+				socket.on("data", function(d) {
+					console.log("data:", d.toString());
+					socket.destroy();
+				});
+				socket.write(buf);
+			});
+			s.listen(30200);
+			// done();
+			var bp = pool.NewPool(8, 10240);
+			var con = netw.NewCon(bp, {
+				II: 0,
+				OnConn: function(c) {
+					console.log("onconn");
+					expect(false).equal(c === null);
+					return true;
+				},
+				OnErr: function(c, err) {
+					expect(false).equal(c === null);
+					console.log(err, "--->");
+				},
+				OnClose: function(c) {
+					expect(false).equal(c === null);
+					console.log("--->close");
+					done();
+				},
+				OnCmd: function(c) {
+					expect("abc").equal(c.D.toString());
+					console.log(c.D.toString());
+					this.II++;
+					if (this.II > 1) {
+						con.write("abccc");
+					}
+				},
+			});
+			con.connect(30200, '127.0.0.1');
+		});
+		it("err", function(done) {
+			// done();
+			var bp = pool.NewPool(8, 10240);
+			var con = netw.NewCon(bp, {
+				II: 0,
+				OnConn: function(c) {
+					expect(true).equal(c);
+					return true;
+				},
+				OnErr: function(c, err) {
+					expect(false).equal(c === null);
+					console.log(err, "--->");
+					done();
+				},
+				OnClose: function(c) {
+					expect(true).equal(c !== null);
+				},
+				OnCmd: function(c) {
+					expect(true).equal(c);
+				},
+			});
+			con.connect('127.0.0.x', 22222);
+		});
+	});
 	describe("data", function() {
 		var bp = pool.NewPool(8, 10240);
 		var con = netw.NewCon(bp, {
 			OnConn: function(c) {
-				console.log(c);
+				expect(false).equal(c === null);
 				return true;
 			},
 			OnErr: function(c, err) {
-				console.log(c, err);
+				expect(false).equal(c === null);
+				console.log(err);
 			},
 			OnClose: function(c) {
-				console.log(c);
+				expect(false).equal(c === null);
 			},
 			OnCmd: function(c) {
 				expect("abc").equal(c.D.toString());
 				console.log(c.D.toString());
+				c.Done();
 			},
 		});
-		var buf = new Buffer(16);
-		buf.write(netw.H_MOD);
-		buf.writeUInt16BE(3, 3);
-		buf.write("abc", 5);
-		buf.write(netw.H_MOD, 8);
-		buf.writeUInt16BE(3, 11);
-		buf.write("abc", 13);
 		it("ondata", function() {
 			console.log("\nlog-->");
 			//
@@ -100,28 +166,5 @@ describe('netw', function() {
 		ch.OnClose(null);
 		ch.OnErr(null, null);
 		ch.OnCmd(null);
-	});
-	describe("connect", function() {
-		var bp = pool.NewPool(8, 10240);
-		var con = netw.NewCon(bp, {
-			OnConn: function(c) {
-				console.log(c);
-				return true;
-			},
-			OnErr: function(c, err) {
-				console.log(c, err);
-			},
-			OnClose: function(c) {
-				console.log(c);
-			},
-			OnCmd: function(c) {
-				expect("abc").equal(c.D.toString());
-				console.log(c.D.toString());
-			},
-		});
-		con.connect("localhost", "80");
-		con.onclose();
-		con.onerr();
-		con.onconn();
 	});
 });
