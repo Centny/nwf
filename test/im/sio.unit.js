@@ -4,24 +4,19 @@ var io = require('socket.io')(http);
 var sio = require('../../lib/im/sio');
 var pool = require('../../lib/buffer');
 var sic = require('socket.io-client');
-
-app.get('/', function(req, res) {
-	res.send('<h1>Welcome</h1>');
-});
-var port = 9891;
-var host = '127.0.0.1';
 var bp = pool.NewPool(8, 102400);
-var ss = sio.NewSIO_j(io, bp, port, host, {
-	sid: "abbb",
-	token: "abc"
-});
-setTimeout(function() {
-	http.listen(3000, function() {
-		console.log('listening on *:3000');
-	});
-}, 1);
 
 function ddd(done) {
+
+	app.get('/', function(req, res) {
+		res.send('<h1>Welcome</h1>');
+	});
+	var ss = sio.NewSIO_j(io, bp, "http://localhost:9892/listSrv");
+	setTimeout(function() {
+		http.listen(3000, function() {
+			console.log('listening on *:3000');
+		});
+	}, 1);
 	ss.recon();
 	var IM = ss.IM;
 	var mc = 0;
@@ -32,10 +27,15 @@ function ddd(done) {
 			r: ["abcc"],
 			c: new Buffer("bbb"),
 		});
+		sc.emit('li', {
+			token: "abc",
+		});
 		sc.emit('li', {});
 	});
 	sc.on("li", function(v) {
-		IM.uli_({}, {
+		IM.uli_({
+			token: "abc",
+		}, {
 			id: "aa-1",
 			cback: function(tv) {
 				// console.log(tv, v);
@@ -60,6 +60,8 @@ function ddd(done) {
 		if (mc >= 10000) {
 			console.log("mc", mc);
 			sc.emit("lo", {});
+			ss.ims.token = "";
+			ss.OnConn();
 			setTimeout(function() {
 				sc.close();
 				ss.running = false;
@@ -89,14 +91,41 @@ describe('sio', function() {
 		ddd(done);
 		// }, 1000);
 	});
-	it("imerr", function() {
-		sio.NewSIO_j(io, bp, "sdfsf", "2", {
-			sid: "abbb",
-			token: "abc"
+	it("imerr", function(done) {
+		var st = sio.NewSIO_j(io, bp, "sdfsf");
+		st.rc_t = 10;
+		st.recon();
+		setTimeout(function() {
+			st.rc_t = 10000;
+			done();
+		}, 1000);
+		var st2 = sio.NewSIO_j(io, bp, "http://localhost:9892/listSrv");
+		st2.recon();
+		st2.running = false;
+		st2.recon();
+		st2.OnCmd({
+			V: function() {
+				return {};
+			},
 		});
-		sio.NewSIO_j(io, bp, port, host, {
-			sid: "abbb",
-			token: "sddd"
+		st2.s = "sss";
+		st2.onconn({
+			conn: {
+				remoteAddress: "",
+				close: function() {},
+			},
+			emit: function() {},
 		});
+		st2.rc_t = 10;
+		st2.dosrv("error", "", "");
+		st2.dosrv("", "", '{"code":1,"data":[]}');
+		st2.dosrv("", "", '{"code":0,"data":[]}');
+		st2.dosrv("", "", JSON.stringify({
+			code: 0,
+			data: [{
+				host: "",
+				port: 2343,
+			}],
+		}));
 	});
 });

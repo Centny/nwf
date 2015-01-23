@@ -29,7 +29,9 @@ function CC(dd, cmd) {
 }
 CC.prototype.uli = function() {
 	var self = this;
-	this.ic.uli_({}, {
+	this.ic.uli_({
+		token: "abc",
+	}, {
 		id: "01",
 		cback: function(v) {
 			self.dd(v);

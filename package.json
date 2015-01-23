@@ -6,6 +6,9 @@
     "engines": {
         "node": ">= 0.8.11"
     },
+    "bin": {
+        "imn": "./lib/imn/cli.js"
+    },
     "devDependencies": {
         "chai": "0.5.11",
         "jshint": "2.1.10",
