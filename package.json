@@ -10,7 +10,7 @@
         "imn": "./lib/imn/cli.js"
     },
     "devDependencies": {
-        "chai": "0.5.11",
+        "chai": "1.10.0",
         "jshint": "2.1.10",
         "istanbul": "0.1.43",
         "mocha": "1.12.0"
