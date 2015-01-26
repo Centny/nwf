@@ -17,6 +17,20 @@
 			function ab2str(buf) {
    				return String.fromCharCode.apply(null, new Uint16Array(buf));
 			}
+			function stringToUint(string) {
+				var string = unescape(encodeURIComponent(string)),
+				charList = string.split(''),
+				uintArray = [];
+				for (var i = 0; i < charList.length; i++) {
+					uintArray.push(charList[i].charCodeAt(0));
+				}
+				return new Uint8Array(uintArray);
+			}
+			function uintToString(uintArray) {
+			    var encodedString = String.fromCharCode.apply(null, uintArray),
+			        decodedString = decodeURIComponent(escape(encodedString));
+			    return decodedString;
+			}
 			var chat = io.connect('http://localhost:3000/w.io');
 			chat.on('connect', function () {
 				chat.emit("li",{token:"abc"});
@@ -24,8 +38,8 @@
 			var ssa=null;
 			chat.on("ms",function(v){
 				ssa=v;
-				console.log(v);
-				console.log(ab2str(v));
+				// console.log(v);
+				console.log(uintToString(new Uint8Array(v.c)));
 			});
         </script>
     </head>
