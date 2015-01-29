@@ -35,6 +35,9 @@
 			chat.on('connect', function () {
 				chat.emit("li",{token:"abc"});
 			});
+			chat.on('li',function(v){
+				console.log(v);
+			});
 			var ssa=null;
 			chat.on("ms",function(v){
 				ssa=v;
