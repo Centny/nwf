@@ -6,30 +6,19 @@
         <!--[if lt IE 8]><script src="./lib/json3.min.js"></script><![endif]-->
         <script src="./socket.io/socket.io.js"></script>
         <script type="text/javascript">
-        	function str2ab(str) {
-			    var buf = new ArrayBuffer(str.length*2); // 每个字符占用2个字节
-			    var bufView = new Uint16Array(buf);
-			    for (var i=0, strLen=str.length; i<strLen; i++) {
-			         bufView[i] = str.charCodeAt(i);
-			    }
-			    return buf;
-			}
-			function ab2str(buf) {
-   				return String.fromCharCode.apply(null, new Uint16Array(buf));
-			}
-			function stringToUint(string) {
-				var string = unescape(encodeURIComponent(string)),
-				charList = string.split(''),
-				uintArray = [];
-				for (var i = 0; i < charList.length; i++) {
-					uintArray.push(charList[i].charCodeAt(0));
+			function str2ab(str) {
+				var str = unescape(encodeURIComponent(str));
+				var buf=new ArrayBuffer(str.length);
+				var ubuf=new Uint8Array(buf);
+				for (var i = 0; i < str.length; i++) {
+					ubuf[i]=str.charCodeAt(i);
 				}
-				return new Uint8Array(uintArray);
+				return buf;
 			}
-			function uintToString(uintArray) {
-			    var encodedString = String.fromCharCode.apply(null, uintArray),
-			        decodedString = decodeURIComponent(escape(encodedString));
-			    return decodedString;
+			function ab2str(ab) {
+			    var enc_s = String.fromCharCode.apply(null, new Uint8Array(ab));
+			    var dec_s = decodeURIComponent(escape(enc_s));
+			    return dec_s;
 			}
 			var chat = io.connect('http://localhost:3000/w.io');
 			chat.on('connect', function () {
@@ -42,7 +31,7 @@
 			chat.on("ms",function(v){
 				ssa=v;
 				// console.log(v);
-				console.log(uintToString(new Uint8Array(v.c)));
+				console.log(ab2str(v.c));
 			});
         </script>
     </head>
