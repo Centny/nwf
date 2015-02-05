@@ -8,7 +8,7 @@ function CC(dd, cmd) {
 	this.dd = dd;
 	this.cmd = cmd;
 	this.bp = pool.NewPool(8, 10240);
-	this.ic = im.NewIM_j(this.bp, {
+	this.ic = im.NewIM_p(this.bp, {
 		OnConn: function(c) {
 			expect(false).equal(c === null);
 			self.nli();
@@ -60,13 +60,14 @@ describe('im', function() {
 			c2 = new CC(function(v2) {
 				c2.ic.emit(v2.res.r, [v1.res.r], 0, new Buffer("abc", "utf8"));
 			}, function(c) {
-				var v = c.V();
+				var v = c.V("PROTO");
 				c2.ic.emit(v.d, [v.s], 0, new Buffer("ebf", "utf8"));
 				sc++;
 			});
 			c2.ic.connect(9891, '127.0.0.1');
 		}, function(c) {
-			var v = c.V();
+			// console.log("----->", c.D.toString())
+			var v = c.V("PROTO");
 			c1.ic.emit(v.d, [v.s], 0, new Buffer("ebf", "utf8"));
 		});
 		c1.ic.connect(9891, '127.0.0.1');
@@ -95,7 +96,8 @@ describe('im', function() {
 	});
 	it("err", function() {
 		var bp = pool.NewPool(8, 10240);
-		var ic = im.NewIM_j(bp, {
+		im.NewIM_j(bp, {});
+		var ic = im.NewIM_p(bp, {
 			OnConn: function(c) {
 				expect(false).equal(c === null);
 				return true;

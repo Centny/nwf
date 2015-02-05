@@ -24,8 +24,10 @@
 			chat.on('connect', function () {
 				chat.emit("li",{token:"abc"});
 			});
+			var liv=null;
 			chat.on('li',function(v){
 				console.log(v);
+				liv=v;
 			});
 			var ssa=null;
 			chat.on("ms",function(v){
@@ -33,6 +35,12 @@
 				// console.log(v);
 				console.log(ab2str(v.c));
 			});
+			function send(r,c){
+				chat.emit("ms",{r:[r],c:str2ab(c)});
+			}
+			function ss(){
+				chat.emit("ms",{r:[liv.res.r],t:0,c:str2ab("sssss->abc")});
+			}
         </script>
     </head>
     <body>
