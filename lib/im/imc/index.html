@@ -20,9 +20,9 @@
 			    var dec_s = decodeURIComponent(escape(enc_s));
 			    return dec_s;
 			}
-			var chat = io.connect('http://localhost:3000/w.io');
+			var chat = io.connect(location.href.replace("/index.html","")+'/w.io');
 			chat.on('connect', function () {
-				chat.emit("li",{token:"abc"});
+				chat.emit("li",{token:"abc",ctype:20});
 			});
 			var liv=null;
 			chat.on('li',function(v){
@@ -36,7 +36,7 @@
 				console.log(ab2str(v.c));
 			});
 			function send(r,c){
-				chat.emit("ms",{r:[r],c:str2ab(c)});
+				chat.emit("ms",{r:[r],c:str2ab(c),t:0});
 			}
 			function ss(){
 				chat.emit("ms",{r:[liv.res.r],t:0,c:str2ab("sssss->abc")});
