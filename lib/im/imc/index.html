@@ -20,7 +20,7 @@
 			    var dec_s = decodeURIComponent(escape(enc_s));
 			    return dec_s;
 			}
-			var chat = io.connect(location.href.replace("/index.html","")+'/w.io');
+			var chat = io.connect(location.href.replace("index.html","")+'w.io');
 			chat.on('connect', function () {
 				chat.emit("li",{token:"abc",ctype:20});
 			});
