@@ -50,6 +50,7 @@ function ddd(done) {
 						c: new Buffer("aaa"),
 					}, "PROTO");
 				}
+				sc.emit("ur", {});
 				sc.emit("ms", {
 					t: 0,
 					r: [tv.res.r],
@@ -61,6 +62,10 @@ function ddd(done) {
 	sc.on("ms", function() {
 		mc++;
 		if (mc >= 5000) {
+			if (this.r__) {
+				return;
+			}
+			this.r__ = true;
 			// console.log("-->")
 			console.log("mc", mc);
 			sc.emit("lo", {});
